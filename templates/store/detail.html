@@ -1,0 +1,155 @@
+{% extends "../base.html" %}
+{% load static %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{% static 'store/css/details.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnify/2.3.3/css/magnify.css"
+    integrity="sha512-JxBFHHd+xyHl++SdVJYCCgxGPJKCTTaqndOl/n12qI73hgj7PuGuYDUcCgtdSHTeXSHCtW4us4Qmv+xwPqKVjQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock %}
+
+{% block title %}
+{% if product %}{{ product.product_name }}{% else %}Product{% endif %}
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div class="alert alert-warning" alert-{{ message.tags }} role="alert">
+        {% for message in messages  %}
+        {{message|safe}} - <a href="{% url "account:wishlist" %}" class="alert-link">Your Wishlist</a>.
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="row g-3">
+        <div class="col-md-5 ps-3 col-lg-5 order-md-last p-0 order-1 sticky">
+            <div class="d-grid gap-2">
+                <div class="d-flex d-flex-inline justify-content-between">
+                    <div><span class="h3">${{ product.regular_price }}</span>
+                        <p class="text-muted">includes tax</p>
+                    </div>
+                    <div>
+                        <label for="select">Qty</label>
+                        <select id="select" class="h6">
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                </div>
+                <hr>
+                <button type="button" id="add-button" value="{{product.id}}" class="btn btn-success fw500">Add to
+                    basket</button>
+                <a href="{% url "account:user_wishlist" product.id  %}" class="btn btn-light fw500" role="button"
+                    aria-disabled="true">Add to Wish List</a>
+            </div>
+        </div>
+        <div class="col-md-7 col-lg-7 p-0">
+            <div class="card mb-3 border-0">
+                <div class="row g-0">
+                    <div class="col-md-12">
+                        <div class="card-body p-1">
+                            <h1 class="mb-0 h2 pe-4 pb-4">{{ product.product_name }}</h1>
+                            <div class="ecommerce-gallery" data-mdb-zoom-effect="true" data-mdb-auto-height="true">
+                                <div class="row py-3 shadow-5">
+                                    {% for image in product.product_image.all %}
+                                    {% if image.is_feature %}
+                                    <div class="col-12 mb-1">
+                                        <div class="lightbox">
+                                            <img id="zoom_01" src="{{ image.image.url }}"
+                                                alt="{{ image.image.alt_text }}" class="w-100 active" />
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-3 mt-1">
+                                        <img src="{{ image.image.url }}" alt="{{ image.image.alt_text }}"
+                                            class="w-100" />
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div class="bg-light">
+                                {% for image in product.product_image.all %}
+                                {% if image.is_feature %}
+                                            <img id="zoom_01" class="img-fluid mx-auto d-block zoom" width="200px" alt="Responsive image"
+                                                src="{{ image.image.url }}" alt="{{ image.image.alt_text }}" data-zoom-image="{{ image.image.url }}">
+                                {% else %}
+                                    <img class="img-fluid d-block-inline pt-3" width="100px" alt="Responsive image"
+                                        src="{{ image.image.url }}" alt="{{ image.image.alt_text }}">
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+ -->
+
+<script>
+    $(document).on('click', '#add-button', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "basket:basket_add" %}',
+            data: {
+                productid: $('#add-button').val(),
+                productqty: $('#select option:selected').text(),
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                action: 'post'
+            },
+            success: function (json) {
+                document.getElementById("basket-qty").innerHTML = json.qty
+            },
+            error: function (xhr, errmsg, err) {}
+        });
+    })
+</script>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'store/js/elevatezoom.js' %}"></script>
+
+<script>
+    var img = $('#zoom_01');
+    img.elevateZoom({
+        zoomType: "inner",
+        cursor: "crosshair",
+        scrollZoom: true,
+        zoomLevel: 0.1
+    });
+
+    function changezoom() {
+        $('.zoomContainer').remove();
+        img.removeData('elevateZoom');
+        img.removeData('zoomImage');
+    }
+</script>
+
+<script>
+    $(document).on('click', '.w-100', function () {
+        var tobemain = String(this.src);
+
+        var tobesmall = String(document.getElementsByClassName("active")[0].src);
+        var currentactive = document.getElementsByClassName("active")[0];
+        console.log(currentactive)
+        console.log(tobemain)
+
+        $(this).attr("src", tobesmall);
+        $(currentactive).attr("src", tobemain);
+
+        img = $('#zoom_01');
+        changezoom();
+        img.elevateZoom({
+            zoomType: "inner",
+            cursor: "crosshair",
+            scrollZoom: true,
+            zoomLevel: 0.1
+        });
+    });
+</script>
+
+{% endblock %}
