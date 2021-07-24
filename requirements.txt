@@ -69,6 +69,5 @@ virtualenv==20.2.2
 virtualenv-clone==0.5.4
 wcwidth==0.2.5
 Werkzeug==1.0.1
-whitenoise==5.2.0
 win-inet-pton @ file:///C:/ci/win_inet_pton_1605306167264/work
 wincertstore==0.2
