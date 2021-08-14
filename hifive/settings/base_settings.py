@@ -27,7 +27,7 @@ SECRET_KEY = 'cw0so%+88p8+7*1^z#=3(fru8tsi^m7ca*wf8vh6zvvcwd7_so'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dazzling-kobuk-valley-23546.herokuapp.com','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','hifive.eba-fuipjhfa.us-west-2.elasticbeanstalk.com']
 
 
 # Application definition
@@ -129,9 +129,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = (
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
-)
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

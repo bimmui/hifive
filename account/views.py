@@ -45,10 +45,14 @@ def dashboard(request):
 @login_required
 def edit_details(request):
     if request.method == 'POST':
+        print("got the post")
         user_form = UserEditForm(instance=request.user, data=request.POST)
 
         if user_form.is_valid():
-            user_form.save()
+            user = Customer.objects.get(email=request.user.email)
+            user.name = user_form.cleaned_data['first_name']
+            user.save()
+            return redirect('account:dashboard')
     else:
         user_form = UserEditForm(instance=request.user)
 
@@ -73,21 +77,24 @@ def account_register(request):
     if request.method == 'POST':
         registerForm = RegistrationForm(request.POST)
         if registerForm.is_valid():
-            user = registerForm.save(commit=False)
-            user.email = registerForm.cleaned_data['email']
-            user.set_password(registerForm.cleaned_data['password'])
-            user.is_active = False
-            user.save()
-            current_site = get_current_site(request)
-            subject = 'Activate your Account'
-            message = render_to_string('account/registration/account_activation_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            })
-            user.email_user(subject=subject, message=message)
-            return render(request, 'account/registration/register_confirm.html')
+            blacklistedaccounts = Customer.objects.filter(is_blacklisted=True, email=registerForm.cleaned_data['email'])
+            if not blacklistedaccounts.exists():
+                user = registerForm.save(commit=False)
+                user.email = registerForm.cleaned_data['email']
+                user.name = registerForm.cleaned_data['user_name']
+                user.set_password(registerForm.cleaned_data['password'])
+                user.is_active = False
+                user.save()
+                current_site = get_current_site(request)
+                subject = 'Activate your Account'
+                message = render_to_string('account/registration/account_activation_email.html', {
+                    'user': user,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                })
+                user.email_user(subject=subject, message=message)
+                return render(request, 'account/registration/register_confirm.html')
     else:
         registerForm = RegistrationForm()
     return render(request, 'account/registration/register.html', {'form': registerForm})

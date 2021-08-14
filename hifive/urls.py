@@ -37,5 +37,4 @@ if settings.DEBUG:
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
-    SHOW_TOOLBAR_CALLBACK = True 
-    print("done")
+    SHOW_TOOLBAR_CALLBACK = True
