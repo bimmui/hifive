@@ -3,7 +3,7 @@ from store.models import Product
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import login, logout
-from django.http import HttpResponseRedirect 
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
@@ -95,6 +95,8 @@ def account_register(request):
                 })
                 user.email_user(subject=subject, message=message)
                 return render(request, 'account/registration/register_confirm.html')
+            else:
+                return HttpResponse("Error handler content", status=400)
     else:
         registerForm = RegistrationForm()
     return render(request, 'account/registration/register.html', {'form': registerForm})

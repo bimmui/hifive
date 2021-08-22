@@ -81,6 +81,7 @@ class Product(models.Model):
         help_text=_("Required"),
         max_length=255,
     )
+    tags = models.TextField(blank=True)
     description = models.TextField(verbose_name=_("description"), help_text=_("Not Required"), blank=True)
     slug = models.SlugField(max_length=255)
     regular_price = models.DecimalField(
@@ -158,7 +159,9 @@ class ProductImage(models.Model):
     """
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_image")
-    image = models.URLField(max_length=500, blank=True, unique=True)
+    # add "unique=True" after done testing to the  line of code below
+    image = models.URLField(max_length=500, blank=True)
+    hoverimage = models.URLField(max_length=500, blank=True)
     alt_text = models.CharField(
         verbose_name=_("Alturnative text"),
         help_text=_("Please add alturnative text"),
