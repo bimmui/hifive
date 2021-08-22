@@ -55,13 +55,13 @@
                                     {% if image.is_feature %}
                                     <div class="col-12 mb-1">
                                         <div class="lightbox">
-                                            <img id="zoom_01" src="{{ image.image.url }}"
+                                            <img id="zoom_01" src="{{ image.image }}"
                                                 alt="{{ image.image.alt_text }}" class="w-100 active" />
                                         </div>
                                     </div>
                                     {% else %}
                                     <div class="col-3 mt-1">
-                                        <img src="{{ image.image.url }}" alt="{{ image.image.alt_text }}"
+                                        <img src="{{ image.image }}" alt="{{ image.image.alt_text }}"
                                             class="w-100" />
                                     </div>
                                     {% endif %}

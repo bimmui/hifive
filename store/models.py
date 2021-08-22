@@ -158,12 +158,7 @@ class ProductImage(models.Model):
     """
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_image")
-    image = models.ImageField(
-        verbose_name=_("image"),
-        help_text=_("Upload a product image"),
-        upload_to="images/",
-        default="images/default.png",
-    )
+    image = models.URLField(max_length=500, blank=True, unique=True)
     alt_text = models.CharField(
         verbose_name=_("Alturnative text"),
         help_text=_("Please add alturnative text"),
