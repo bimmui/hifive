@@ -172,3 +172,17 @@ def user_orders(request):
     user_id = request.user.id
     orders = Order.objects.filter(user_id=user_id).filter(billing_status=True)
     return render(request, "account/dashboard/user_orders.html", {"orders": orders})
+
+@login_required
+def recently_viewed(request):
+    user = get_object_or_404(Customer, id=request.user.id)
+    viewhistory = user.viewhistory
+    print(viewhistory)
+    try:
+        viewhistory_list = [int(s) for s in viewhistory.split(',')]
+        viewhistory_list.reverse()
+        products = Product.objects.filter(id__in=viewhistory_list)
+        print(products)
+    except:
+        products = ""
+    return render(request, "account/dashboard/recently_viewed.html", {"products": products})

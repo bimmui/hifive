@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.template.defaulttags import register
 
 from .models import Category, Product
+from account.models import Customer
 #from .scripts import
 
 
@@ -16,6 +17,9 @@ def all_products(request):
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, is_active=True)
+    if request.user.is_authenticated:
+        user = get_object_or_404(Customer, id=request.user.id)
+        user.update_viewhistory(product.id)
     return render(request, 'store/detail.html', {'product': product})
 
 def category_list(request, category_slug):

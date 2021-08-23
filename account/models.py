@@ -41,6 +41,7 @@ class CustomAccountManager(BaseUserManager):
 class Customer(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
     name = models.CharField(max_length=150)
+    viewhistory = models.CharField(max_length=150, blank=True)
     mobile = models.CharField(max_length=20, blank=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -65,6 +66,24 @@ class Customer(AbstractBaseUser, PermissionsMixin):
             [self.email],
             fail_silently=False,
         )
+
+    def update_viewhistory(self, idnum):
+        if self.viewhistory != "":
+            viewhistory_list = [int(s) for s in self.viewhistory.split(',')]
+            if idnum in viewhistory_list:
+                viewhistory_list.remove(idnum)
+        else:
+            viewhistory_list = []
+        if len(viewhistory_list) > 50:
+            viewhistory_list.pop(0)
+            viewhistory_list.append(idnum)
+            str_viewhistory_list = str(viewhistory_list)[1:-1].replace(" ", "")
+            self.viewhistory = str_viewhistory_list
+        else:
+            viewhistory_list.append(idnum)
+            str_viewhistory_list = str(viewhistory_list)[1:-1].replace(" ", "")
+            self.viewhistory = str_viewhistory_list
+        self.save()
 
     def __str__(self):
         return self.email
