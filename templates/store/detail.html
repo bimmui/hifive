@@ -39,8 +39,62 @@
                 <hr>
                 <button type="button" id="add-button" value="{{product.id}}" class="btn btn-success fw500">Add to
                     basket</button>
-                <a href="{% url "account:user_wishlist" product.id  %}" class="btn btn-light fw500" role="button"
-                    aria-disabled="true">Add to Wish List</a>
+                <a href="{% url "account:user_wishlist" product.id  %}" class="btn btn-light fw500 wishlist"
+                    role="button" aria-disabled="true">Add to Wish List</a>
+                <div class="cnter-holder">
+                    <div class="freeshipping btn-light fw500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-truck" viewBox="0 0 16 16">
+                            <path
+                                d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                        </svg>
+                        <strong>Free Shipping</strong>
+                        <br>
+                        Free standard shipping on orders over $49.00 USD
+                    </div>
+                </div>
+                <button class="collapsible"><strong>Size and Fit</strong></button>
+                <div class="content">
+                    <p>
+                        Size: {{ product.product_specificationvalues.value }}
+                        <br>
+                        Shoulder:
+                        <br>
+                        Bust:
+                        <br>
+                        Length:
+                        <br>
+                        Sleeve Length:
+                    </p>
+                </div>
+                <button class="collapsible"><strong>Description</strong></button>
+                <div class="content">
+                    <p>
+                        Style:
+                        <br>
+                        Color:
+                        <br>
+                        Pattern Type:
+                        <br>
+                        Season:
+                        <br>
+                        Fit-Type:
+                        <br>
+                        Details:
+                    </p>
+                </div>
+                <button class="collapsible"><strong>Materials and Composition</strong></button>
+                <div class="content">
+                    <p>
+                        Material:
+                        <br>
+                        Composition:
+                        <br>
+                        Fabric:
+                        <br>
+                        Care Instructions:
+                    </p>
+                </div>
             </div>
         </div>
         <div class="col-md-7 col-lg-7 p-0">
@@ -55,14 +109,13 @@
                                     {% if image.is_feature %}
                                     <div class="col-12 mb-1">
                                         <div class="lightbox">
-                                            <img id="zoom_01" src="{{ image.image }}"
-                                                alt="{{ image.image.alt_text }}" class="w-100 active" />
+                                            <img id="zoom_01" src="{{ image.image }}" alt="{{ image.image.alt_text }}"
+                                                class="w-100 active" />
                                         </div>
                                     </div>
                                     {% else %}
                                     <div class="col-3 mt-1">
-                                        <img src="{{ image.image }}" alt="{{ image.image.alt_text }}"
-                                            class="w-100" />
+                                        <img src="{{ image.image }}" alt="{{ image.image.alt_text }}" class="w-100" />
                                     </div>
                                     {% endif %}
                                     {% endfor %}
@@ -150,6 +203,22 @@
             zoomLevel: 0.1
         });
     });
+</script>
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
 </script>
 
 {% endblock %}

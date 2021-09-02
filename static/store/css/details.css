@@ -2,3 +2,43 @@
   width: 50px;
   height: 40px;
 }
+
+.cnter-holder {
+  display: flex;
+  justify-content: center;
+}
+
+.wishlist {
+  background-color: #fff3cd;
+}
+
+.freeshipping {
+  font-size: small;
+  height: auto;
+  margin: 2em 4em;
+  padding: 2em 2em;
+}
+
+.collapsible {
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 18px;
+}
+
+.active, .collapsible:hover {
+  background-color: #ededed;
+}
+
+.content {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  font-size: 14px;
+}

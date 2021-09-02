@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.template.defaulttags import register
 
-from .models import Category, Product
+from .models import Category, Product, ProductSpecificationValue, ProductSpecification
 from account.models import Customer
 #from .scripts import
 
@@ -16,10 +16,12 @@ def all_products(request):
     return render(request, 'store/index.html', {'products': products})
 
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug, is_active=True)
+    product = get_object_or_404(Product.objects.prefetch_related("product_specificationvalues").filter(is_active=True, slug=slug))
     if request.user.is_authenticated:
         user = get_object_or_404(Customer, id=request.user.id)
         user.update_viewhistory(product.id)
+    values = ProductSpecificationValue.objects.filter(product_id=product.id)
+    print(values)
     return render(request, 'store/detail.html', {'product': product})
 
 def category_list(request, category_slug):

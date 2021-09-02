@@ -9,7 +9,7 @@
     <h1 class="h2">{{ category.name|title }}</h1>
   </div>
   <div class="col-12 d-flex justify-content-between">
-    <div><b>Popular</b> products purchased</div>
+    <div>Browse {{ category.name }} products available on Hi-Five!</div>
   </div>
   <hr />
 </div>
@@ -25,7 +25,8 @@
           <div class="card border-0">
             {% for image in product.product_image.all %}
             {% if image.is_feature %}
-            <img class="img-fluid" alt="Responsive image" src="{{ image.image.url }}" alt="{{ image.image.alt_text }}">
+            <img class="mainimg img-fluid" alt="Responsive image" src="{{ image.image }}"
+                    alt="{{ image.image.alt_text }}" swapimg="{{ image.hoverimage }}" ogimg="{{ image.image }}">
             {% endif %}
             {% endfor %}
             <div class="card-body px-0">
@@ -45,5 +46,24 @@
     </div>
   </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
+<script>
+$(function(){
+  $(".mainimg").on({
+   mouseenter: function(){
+     var swapimg = $(this).attr('swapimg');
+    $(this).attr('src', swapimg);
+    console.log("changed to hover img");
+  },
+  mouseleave: function(){
+    var ogimg = $(this).attr('ogimg');
+    $(this).attr('src', ogimg);
+    console.log("changed to og img");
+  }
+  });
+  
+});
+</script>
 {% endblock %}
